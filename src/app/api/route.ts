@@ -35,17 +35,24 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json();
+  const fullItem = { ...body, createdAt: Date.now(), updatedAt: Date.now() };
   const newItemRef = push(refTodo);
-  set(newItemRef, body).then(() => console.log("Done:", newItemRef.key));
-  return NextResponse.json({ ...body, key: newItemRef.key });
+  set(newItemRef, fullItem).then(() => console.log("Done:", newItemRef.key));
+  return NextResponse.json({ ...fullItem, key: newItemRef.key });
 }
 
 export async function PUT(request: Request) {
   const { id, ...rest } = await request.json();
   const updates: any = {};
-  updates["user/1001/todo/" + id] = rest;
+  const oldTodo = await get(child(ref(db), "user/1001/todo/" + id));
+
+  updates["user/1001/todo/" + id] = {
+    ...rest,
+    createdAt: oldTodo.val().createdAt,
+    updatedAt: Date.now(),
+  };
   update(ref(db), updates);
-  return NextResponse.json({ id, ...rest });
+  return NextResponse.json({ ...updates["user/1001/todo/" + id] });
 }
 
 // DELETE
