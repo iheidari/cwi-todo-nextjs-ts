@@ -5,10 +5,8 @@ import {
   child,
   get,
   set,
-  onValue,
   push,
-  onChildAdded,
-  onChildChanged,
+  update,
 } from "firebase/database";
 import firebase, { initializeApp } from "firebase/app";
 
@@ -30,49 +28,9 @@ const db = getDatabase(app);
 
 const refTodo = ref(db, "user/1001/todo");
 
-// onChildAdded(refTodo, (snapshot) => {
-//   console.log(
-//     "🚀 ~ file: route.ts:47 ~ snapshot.forEach ~ snapshot:",
-//     snapshot.size
-//   );
-
-//   snapshot.forEach((childSnapshot) => {
-//     const childKey = childSnapshot.key;
-//     console.log(
-//       "🚀 ~ file: route.ts:32 ~ snapshot.forEach ~ childKey:",
-//       childKey
-//     );
-//     const childData = childSnapshot.val();
-//     console.log(
-//       "🚀 ~ file: route.ts:34 ~ snapshot.forEach ~ childData:",
-//       childData
-//     );
-//     const childExist = childSnapshot.exists();
-//     console.log(
-//       "🚀 ~ file: route.ts:34 ~ snapshot.forEach ~ childData:",
-//       childExist
-//     );
-//   });
-// });
-
-// onChildChanged(refTodo, (data) => {
-//   // console.log("🚀 ~ file: route.ts:38 ~ onChildChanged ~ data:", data.key);
-// });
-
 export async function GET(request: Request) {
-  // await set(ref(db, "user/[userId]/todo"), {
-  //   username: "iman2",
-  //   email: "iman2@coding.com",
-  //   profile_picture: "imageUrl2",
-  // });
   const todo = await get(child(ref(db), "user/1001/todo"));
-  console.log("🚀 ~ file: route.ts:70 ~ GET ~ todo:", todo.val());
   return NextResponse.json(todo.val());
-  //
-
-  // connect to Firebase Realtime Database
-  // Retrieve all todos
-  // Return to user
 }
 
 export async function POST(request: Request) {
@@ -81,8 +39,15 @@ export async function POST(request: Request) {
   set(newItemRef, body).then(() => console.log("Done:", newItemRef.key));
   return NextResponse.json({ ...body, key: newItemRef.key });
 }
-// POST
-// PUT
+
+export async function PUT(request: Request) {
+  const { id, ...rest } = await request.json();
+  const updates: any = {};
+  updates["user/1001/todo/" + id] = rest;
+  update(ref(db), updates);
+  return NextResponse.json({ id, ...rest });
+}
+
 // DELETE
 // PATCH
 // HEAD
