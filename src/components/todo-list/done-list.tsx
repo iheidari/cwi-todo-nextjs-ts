@@ -1,12 +1,15 @@
+import { getTodo } from "@/servics/todo";
 import RowItem from "./row-item";
 
-const DoneList = () => {
+const DoneList = async () => {
+  const todoList = await getTodo();
+  const rowItems = Object.keys(todoList)
+    .filter((key) => todoList[key].doneAt)
+    .map((key) => <RowItem key={key} title={todoList[key].message} done />);
   return (
     <>
       <h3>Completed</h3>
-      <ul>
-        <RowItem title="See the Doctor" done />
-      </ul>
+      <ul>{rowItems}</ul>
     </>
   );
 };

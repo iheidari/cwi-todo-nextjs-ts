@@ -6,7 +6,7 @@ type RowItemProps = {
 const RowItem = (props: RowItemProps) => {
   return (
     <li>
-      <input type="checkbox" checked={props.done} />
+      <input type="checkbox" checked={props.done} readOnly />
       <label className={props.done ? "line-through" : ""}>{props.title}</label>
       <input type="text" />
       <button className="edit">Edit</button>

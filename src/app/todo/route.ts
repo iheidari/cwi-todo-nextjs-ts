@@ -8,7 +8,7 @@ import {
   push,
   update,
 } from "firebase/database";
-import firebase, { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   databaseURL: "https://todo-list-65bab-default-rtdb.firebaseio.com",
