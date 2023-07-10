@@ -1,11 +1,17 @@
-import { getTodo } from "@/servics/todo";
+import { TodoProps } from ".";
 import RowItem from "./row-item";
 
-const List = async () => {
-  const todoList = await getTodo();
-  const rowItems = Object.keys(todoList)
-    .filter((key) => !todoList[key].doneAt)
-    .map((key) => <RowItem key={key} title={todoList[key].message} />);
+const List = (props: TodoProps) => {
+  const rowItems = Object.keys(props.todos || {})
+    .filter((key) => !props.todos[key].doneAt)
+    .map((key) => <RowItem key={key} title={props.todos[key].message} />);
+  if (rowItems.length === 0) {
+    return (
+      <div style={{ textAlign: "center", fontStyle: "italic", marginTop: 12 }}>
+        No Todo item
+      </div>
+    );
+  }
   return (
     <>
       <h3>Todo</h3>
