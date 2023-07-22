@@ -54,8 +54,3 @@ export async function PUT(request: Request) {
   update(ref(db), updates);
   return NextResponse.json({ ...updates["user/1001/todo/" + id] });
 }
-
-// DELETE
-// PATCH
-// HEAD
-// OPTION
